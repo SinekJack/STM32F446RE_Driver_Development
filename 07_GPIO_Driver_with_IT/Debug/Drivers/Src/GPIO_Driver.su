@@ -1,0 +1,7 @@
+../Drivers/Src/GPIO_Driver.c:11:6:gpio_init	24	static
+../Drivers/Src/GPIO_Driver.c:71:6:gpio_DeInit	16	static
+../Drivers/Src/GPIO_Driver.c:108:9:readFromInput	24	static
+../Drivers/Src/GPIO_Driver.c:114:6:writeToOutput	16	static
+../Drivers/Src/GPIO_Driver.c:122:6:GPIO_IRQInterruptConfig	16	static
+../Drivers/Src/GPIO_Driver.c:163:6:GPIO_IRQPriorityConfig	24	static
+../Drivers/Src/GPIO_Driver.c:176:6:GPIO_IRQHandling	16	static
