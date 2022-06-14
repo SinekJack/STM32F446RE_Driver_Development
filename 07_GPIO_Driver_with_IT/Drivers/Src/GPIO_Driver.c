@@ -16,9 +16,9 @@ void gpio_init(GPIO_Handle_t* pGPIOx)
 		pGPIOx->pGPIOx->MODER &= ~(3 << (2 * pGPIOx->GPIO_PinConfig.pinNumber));
 		pGPIOx->pGPIOx->MODER |= (pGPIOx->GPIO_PinConfig.mode << (2 * pGPIOx->GPIO_PinConfig.pinNumber));
 	}
+	/*For IT*/
 	else
 	{
-		//this part will code later . ( interrupt mode)
 		if(pGPIOx->GPIO_PinConfig.mode == MODE_IT_FT )
 		{
 			//1. configure the FTSR
