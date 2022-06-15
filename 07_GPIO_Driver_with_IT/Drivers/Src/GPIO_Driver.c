@@ -16,9 +16,9 @@ void gpio_init(GPIO_Handle_t* pGPIOx)
 		pGPIOx->pGPIOx->MODER &= ~(3 << (2 * pGPIOx->GPIO_PinConfig.pinNumber));
 		pGPIOx->pGPIOx->MODER |= (pGPIOx->GPIO_PinConfig.mode << (2 * pGPIOx->GPIO_PinConfig.pinNumber));
 	}
-	/*For IT*/
 	else
 	{
+		//this part will code later . ( interrupt mode)
 		if(pGPIOx->GPIO_PinConfig.mode == MODE_IT_FT )
 		{
 			//1. configure the FTSR
@@ -41,14 +41,15 @@ void gpio_init(GPIO_Handle_t* pGPIOx)
 			EXTI->EXTI_FTSR |= ( 1 << pGPIOx->GPIO_PinConfig.pinNumber);
 		}
 
-		}
-	/*SYSCFG Configuration*/
-	uint8_t port = GPIO_BASEADDR_TO_CODE(pGPIOx->pGPIOx);
-	uint8_t temp = pGPIOx->GPIO_PinConfig.pinNumber / 4;
-	uint8_t temp2 = pGPIOx->GPIO_PinConfig.pinNumber % 4;
-	SYSCFG_CLK_EN();
-	SYSCFG->EXTICR[temp] = (port << (4 * temp2));
-
+		/*SYSCFG Configuration*/
+		uint8_t port = GPIO_BASEADDR_TO_CODE(pGPIOx->pGPIOx);
+		uint8_t temp = pGPIOx->GPIO_PinConfig.pinNumber / 4;
+		uint8_t temp2 = pGPIOx->GPIO_PinConfig.pinNumber % 4;
+		SYSCFG_CLK_EN();
+		SYSCFG->EXTICR[temp] = (port << (4 * temp2));
+		/*enabling IMR*/
+		EXTI->EXTI_IMR |= 1 << pGPIOx->GPIO_PinConfig.pinNumber;
+	}
 	/*Output Type*/
 	pGPIOx->pGPIOx->OTYPER |= pGPIOx->GPIO_PinConfig.outputType << (pGPIOx->GPIO_PinConfig.pinNumber);
 	/*Speed Settings*/
@@ -160,7 +161,7 @@ void GPIO_IRQInterruptConfig(uint8_t IRQNumber, uint8_t EnorDi)
 }
 
 
-void GPIO_IRQPriorityConfig(uint8_t IRQNumber,uint32_t IRQPriority)
+void GPIO_IRQPriorityConfig(uint8_t IRQNumber,uint32_t IRQPriority) //priority must be uint32_t because it can shift more than 1 byte.
 {
 	//1. first lets find out the ipr register
 	uint8_t iprx = IRQNumber / 4;
@@ -180,3 +181,4 @@ void GPIO_IRQHandling(uint8_t pinNumber)
 		EXTI->EXTI_PR |= (1 << pinNumber);
 	}
 }
+
